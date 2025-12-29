@@ -36,11 +36,11 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
 
 ## 📸 Ekran Görüntüleri (Screenshots)
 
-<table style="width:600">
+<table style="width:900">
   <tr>
-    <th width="200">Başlangıç Ekranı</th>
-    <th width="200">Hesap Oluşturma Ekranı</th>
-   <th width="200">Giriş Ekranı</th>
+    <th width="300">Başlangıç Ekranı</th>
+    <th width="300">Hesap Oluşturma Ekranı</th>
+   <th width="300">Giriş Ekranı</th>
   </tr>
   <tr>
     <td align="center">
@@ -61,11 +61,11 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
   </tr>
 </table>
 
-<table style="width:600">
+<table style="width:900">
   <tr>
-    <th width="200">Admin AnaSayfası</th>
-    <th width="200">User AnaSayfası</th>
-     <th width="200">Profil Güncelleme Paneli</th>
+    <th width="300">Admin AnaSayfası</th>
+    <th width="300">User AnaSayfası</th>
+     <th width="300">Profil Güncelleme Paneli</th>
   </tr>
   <tr>
     <td align="center">
@@ -83,11 +83,11 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
   </tr>
 </table>
 
-<table style="width:600">
+<table style="width:900">
   <tr>
-    <th width="200">Stok Takibi Paneli</th>
-    <th width="200">Bakım ve Onarım Paneli</th>
-     <th width="200">Bakım Durumu Güncelleme</th>
+    <th width="300">Stok Takibi Paneli</th>
+    <th width="300">Bakım ve Onarım Paneli</th>
+     <th width="300">Bakım Durumu Güncelleme</th>
   </tr>
   <tr>
     <td align="center">
@@ -105,11 +105,11 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
   </tr>
 </table>
 
-<table style="width:600">
+<table style="width:900">
   <tr>
-    <th width="200">Arıza Kaydı Açma</th>
-    <th width="200">Ürün Raporu</th>
-     <th width="200">Log Kaydı Rporu(sadece admin için)</th>
+    <th width="300">Arıza Kaydı Açma</th>
+    <th width="300">Ürün Raporu</th>
+     <th width="300">Log Kaydı Rporu(sadece admin için)</th>
   </tr>
   <tr>
     <td align="center">
@@ -127,11 +127,11 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
   </tr>
 </table>
 
-<table style="width:600">
+<table style="width:900">
   <tr>
-    <th width="200">Yeni Ürün Ekleme İşlemi (sadece admin)</th>
-    <th width="200">Ürün Güncelleme Paneli (sadece admin)</th>
-     <th width="200">Güncelleme İşlemi (sadece admin)</th>
+    <th width="300">Yeni Ürün Ekleme İşlemi (sadece admin)</th>
+    <th width="300">Ürün Güncelleme Paneli (sadece admin)</th>
+     <th width="300">Güncelleme İşlemi (sadece admin)</th>
   </tr>
   <tr>
     <td align="center">
@@ -149,11 +149,11 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
   </tr>
 </table>
 
-<table style="width:600">
+<table style="width:900">
   <tr>
-    <th width="200">Kullanıcı Yönetim Paneli (sadece admin)</th>
-    <th width="200">Kullanıcı Güncelleme Paneli (sadece admin)</th>
-     <th width="200">Şifre Güncelleme İşlemi</th>
+    <th width="300">Kullanıcı Yönetim Paneli (sadece admin)</th>
+    <th width="300">Kullanıcı Güncelleme Paneli (sadece admin)</th>
+     <th width="300">Şifre Güncelleme İşlemi</th>
   </tr>
   <tr>
     <td align="center">
@@ -170,6 +170,7 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
     </td>
   </tr>
 </table>
+---
 ## ⚙️ Kurulum ve Çalıştırma
 
 Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:

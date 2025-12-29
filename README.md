@@ -34,8 +34,142 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
 * **Veritabanı:** Microsoft SQL Server (T-SQL, Stored Procedures, Triggers)
 * **Frontend:** HTML5, CSS3, Jinja2 Template Engine
 
-## 📸 Screenshots
+## 📸 Ekran Görüntüleri (Screenshots)
 
+<table style="width:600">
+  <tr>
+    <th width="200">Başlangıç Ekranı</th>
+    <th width="200">Hesap Oluşturma Ekranı</th>
+   <th width="200">Giriş Ekranı</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/index.png" width="100%" alt="Başlangıç Ekranı">
+      <br>
+      <em>Güvenli giriş ekranı</em>
+    </td>
+    <td align="center">
+      <img src="screenshots/signup.png" width="100%" alt="Hesap Açma Ekranı">
+      <br>
+      <em>Yeni hesap açma</em>
+    </td>
+     <td align="center">
+      <img src="screenshots/login.png" width="100%" alt="Giriş Ekranı">
+      <br>
+      <em>Hesaba Girme</em>
+    </td>
+  </tr>
+</table>
+
+<table style="width:600">
+  <tr>
+    <th width="200">Admin AnaSayfası</th>
+    <th width="200">User AnaSayfası</th>
+     <th width="200">Profil Güncelleme Paneli</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/adminDashboard.png" width="100%" alt="Admin">
+      <br>
+    </td>
+    <td align="center">
+      <img src="screenshots/userDashboard.png" width="100%" alt="User">
+      <br>
+    </td>
+     <td align="center">
+      <img src="screenshots/profile.png" width="100%" alt="Profil Güncelleme">
+      <br>
+    </td>
+  </tr>
+</table>
+
+<table style="width:600">
+  <tr>
+    <th width="200">Stok Takibi Paneli</th>
+    <th width="200">Bakım ve Onarım Paneli</th>
+     <th width="200">Bakım Durumu Güncelleme</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/stockTracking.png" width="100%" alt="stok işlemleri">
+      <br>
+    </td>
+    <td align="center">
+      <img src="screenshots/maintenance_and_repair.png" width="100%" alt="bakım ve onarım">
+      <br>
+    </td>
+     <td align="center">
+      <img src="screenshots/updateMaintenance.png" width="100%" alt="Bakım Durumu Güncelleme">
+      <br>
+    </td>
+  </tr>
+</table>
+
+<table style="width:600">
+  <tr>
+    <th width="200">Arıza Kaydı Açma</th>
+    <th width="200">Ürün Raporu</th>
+     <th width="200">Log Kaydı Rporu(sadece admin için)</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/addRepairRecord.png" width="100%" alt="arıza kaydı açma">
+      <br>
+    </td>
+    <td align="center">
+      <img src="screenshots/report_product.png" width="100%" alt="ürün raporu">
+      <br>
+    </td>
+     <td align="center">
+      <img src="screenshots/report_logs.png" width="100%" alt="Log Kayıtları Raporu">
+      <br>
+    </td>
+  </tr>
+</table>
+
+<table style="width:600">
+  <tr>
+    <th width="200">Yeni Ürün Ekleme İşlemi (sadece admin)</th>
+    <th width="200">Ürün Güncelleme Paneli (sadece admin)</th>
+     <th width="200">Güncelleme İşlemi (sadece admin)</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/add_product.png" width="100%" alt="yeni ürün ekleme">
+      <br>
+    </td>
+    <td align="center">
+      <img src="screenshots/update_product.png" width="100%" alt="ürün güncelleme paneli">
+      <br>
+    </td>
+     <td align="center">
+      <img src="screenshots/updating.png" width="100%" alt="ürün güncelleme işlemi">
+      <br>
+    </td>
+  </tr>
+</table>
+
+<table style="width:600">
+  <tr>
+    <th width="200">Kullanıcı Yönetim Paneli (sadece admin)</th>
+    <th width="200">Kullanıcı Güncelleme Paneli (sadece admin)</th>
+     <th width="200">Şifre Güncelleme İşlemi</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/manage_users.png" width="100%" alt="kullanıcı yönetim paneli">
+      <br>
+    </td>
+    <td align="center">
+      <img src="screenshots/update_usert.png" width="100%" alt="kullanıcı güncelleme">
+      <br>
+    </td>
+     <td align="center">
+      <img src="screenshots/change_password.png" width="100%" alt="şifre değiştirme işlemi">
+      <br>
+    </td>
+  </tr>
+</table>
 ## ⚙️ Kurulum ve Çalıştırma
 
 Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:

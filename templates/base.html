@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Envanter Yönetim Sistemi</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+        <link rel="icon" href="{{url_for('static', filename='images/favicon.png')}}">
+    </head>
+    <body>
+        <div class="container">
+            <nav class="sidebar">
+                <div class="sidebar-header">
+                    <img src="{{url_for('static', filename='images/logo.png')}}" alt="envanter yönetim sistemi logosu" title="logo" width="150" height="150" >
+                    <h3>Envanter Yönetim Sistemi</h3>
+                </div>
+                <ul class="menu-links">
+                    <li><a href="{{ url_for('open_profile_management_page') }}" class="menu-item-link">
+                        <img src="{{url_for('static', filename='images/profil_yonetimi.png')}}" alt="Profil İkonu" class="menu-icon">
+                        <span>Profil Yönetimi</span>
+                    </a></li>
+                    <li><a href="{{ url_for('open_stock_tracking_page') }}" class="menu-item-link">
+                        <img src="{{url_for('static', filename='images/stok_takibi.png')}}" alt="Stok İkonu" class="menu-icon">
+                        <span>Stok Takibi</span>
+                    </a></li>
+                    <li><a href="{{ url_for('open_maintenance_repair_page') }}" class="menu-item-link">
+                        <img src="{{url_for('static', filename='images/bakim_onarim.png')}}" alt="Bakım İkonu" class="menu-icon">
+                        <span>Bakım & Onarım</span>
+                    </a></li>
+                    <li><a href="{{ url_for('open_reports_page') }}" class="menu-item-link">
+                        <img src="{{url_for('static', filename='images/rapor.png')}}" alt="Rapor İkonu" class="menu-icon">
+                        <span>Raporlar</span>
+                    </a></li>
+                </ul>
+                <div class="sidebar-footer">
+                    <a href="{{ url_for('logout',user_id=user_id) }}" class="logout-btn"> <i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+                </div>
+            </nav>
+            <main class="main-content">
+                <header>
+                    <h2>Hoş Geldiniz</h2>
+                    {% if session['ad_soyad'] %}
+                        <div class="user-info">Merhaba, {{session['kullanici_adi']}}</div>
+                    {% endif %}
+                </header>
+                <div class="content-box">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </main>
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>

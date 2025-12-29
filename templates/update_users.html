@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+
+    <div class="update_user">
+        <div class="card-header">
+            <h3 style="text-align: center; font-weight: bold;">Kullanıcı Güncelleme Paneli</h3>
+            <h4 style="text-align: left; font-size: 15px;">Kullanıcı Detayları</h4>
+        </div>
+        <div class="product-card">
+            <h3> Kullanıcı Bilgileri</h3>
+            <div class="stock-info">Kullanıcı Adı:  {{ user[2] }}</div>
+            <img src="{{ url_for('static', filename='images/user.png') }}" class="product-img" width="150" height="150">
+
+            <div class="status-info">{{ user[0]}} {{ user[1] }}</div>
+            <div class="status-info">e-Mail: {{user[3]}}</div>
+            <div class="status-info">Hesap Oluşturma Tarihi: {{user[6]}}</div>
+        </div>
+        <div class="update-processing">
+            <h3> Güncelleme İşlemi</h3>
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+            <form action="{{url_for('open_update_users_page',user_id=userid)}}" method="POST">
+            <table>
+                <tr><td>Departman Adı:</td><td>
+                        <select class="veriGiris" name="departman_id">
+                            <option value="" disabled>Bir Departman Seçiniz</option>
+                            {% for departman in departments%}
+                                <option value="{{ departman[0] }}" {% if user[4] == departman[0] %} selected {% endif %}>{{ departman[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Kullanucu Rolü Ayarla:</td><td>
+                        <div class="radio-group">
+                            <!-- Seçenek 1 -->
+                            <label style="margin-right: 15px; cursor: pointer;">
+                                <input type="radio" name="role_" value="0" class="veriGiris"
+                                {% if user[5] == 0 or user[5] == False %} checked {% endif %}>
+                                <span style="color: rgb(162, 4, 152); font-weight: bold;">User</span>
+                            </label>
+
+                            <!-- Seçenek 2 -->
+                            <label style="cursor: pointer;">
+                                <input type="radio" name="role_" value="1" class="veriGiris"
+                                {% if user[5] == 1 or user[5] == True %} checked {% endif %}>
+                                <span style="color: rgb(123, 0, 255); font-weight: bold;">Admin</span>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr><td>Hesap Durumu:</td><td>
+                        <select class="veriGiris" name="accountStatus_id">
+                            <option value="" disabled selected>Bir Durum Seçiniz</option>
+                            {% for status in statuses%}
+                                <option value="{{ status[0] }}" {% if user[7] == status[0] %} selected {% endif %}>{{ status[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>İzinde Olma Durumu:</td><td>
+                        <div class="radio-group">
+                            <!-- Seçenek 1 -->
+                            <label style="margin-right: 15px; cursor: pointer;">
+                                <input type="radio" name="is_on_leave" value="1" class="veriGiris" 
+                                {% if user[8] == 1 or user[8] == True %} checked {% endif %}>
+                                <span style="color: rgb(128, 0, 0); font-weight: bold;">İzinde</span>
+                            </label>
+
+                            <!-- Seçenek 2 -->
+                            <label style="cursor: pointer;">
+                                <input type="radio" name="is_on_leave" value="0" class="veriGiris"
+                                {% if user[8] == 0 or user[8] == False %} checked {% endif %}>
+                                <span style="color: rgb(13, 122, 3); font-weight: bold;">İzinde Değil</span>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Erişim İsteği:</td><td>
+                        <div class="radio-group">
+                            <!-- Seçenek 1 -->
+                            <label style="margin-right: 15px; cursor: pointer;">
+                                <input type="radio" name="access_pending" value="1" class="veriGiris"
+                                 {% if user[9] == 1 or user[9] == True %} checked {% endif %}>
+                                <span style="color: rgb(0, 83, 128); font-weight: bold;">Erişim İstiyor</span>
+                            </label>
+
+                            <!-- Seçenek 2 -->
+                            <label style="cursor: pointer;">
+                                <input type="radio" name="access_pending" value="0" class="veriGiris"
+                                {% if user[9] == 0 or user[9] == False %} checked {% endif %}>
+                                <span style="color: rgb(122, 68, 3); font-weight: bold;">Erişim İstemiyor</span>
+                            </label>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="btn btn-success btn-lg" style="background-color: aquamarine;">
+                    <i class="fas fa-save"></i> Değişiklikleri Kaydet
+                </button>
+                
+                <a href="{{ url_for('open_user_management_page', op_id=1) }}" class="btn btn-secondary btn-lg" style="background-color: rgb(238, 149, 86);">
+                    İptal
+                </a>
+            </div>
+            </form>
+        </div>
+         <div class="anasayfaya_don" >
+        <ul>
+            <li>
+                <a href="{% if session['rol'] == 'admin' %}{{ url_for('dashboard_admin') }}{% else %}{{ url_for('dashboard_user') }}{% endif %}" >
+                    Ana Sayfaya Dön
+                </a>
+            </li>
+        </ul>
+    </div>
+    </div>    
+
+{% endblock %}

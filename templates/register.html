@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hesap Oluştur</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+        <style>
+            a{
+                text-decoration: none;
+                font-size: 20px;
+                font-weight: bold;
+            }
+        </style>
+        <link rel="icon" href="{{url_for('static', filename='images/favicon.png')}}">
+    </head>
+    <body>
+        <div class="register">
+            <header><img src="{{url_for('static', filename='images/logo.png')}}" alt="envanter yönetim sistemi logosu" title="logo" width="150" height="150">
+            <h1>Hesap Oluştur</h1>
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+            </header>
+            <form action="/create-account" method="POST">
+                <table>
+                    <tr><td>Kullanıcı Adı:</td><td><input class="veriGiris" type="text" name="kullaniciAdi" value="{{ session['kullanici_adi'] }}" required></td></tr>
+                    <tr><td>Ad:</td><td><input class="veriGiris" type="text" name="ad" required></td></tr>
+                    <tr><td>Soyad:</td><td><input class="veriGiris" type="text" name="soyad" required></td></tr>
+                    <tr><td>Departman Adı:</td><td>
+                        <select class="veriGiris" name="departman" required>
+                            <option value="" disabled selected>Bir Departman Seçiniz</option>
+                            {% for departman in departmanlar%}
+                                <option value="{{ departman[0] }}">{{ departman[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </td></tr>
+                    <tr><td>E-posta Adresi:</td><td><input class="veriGiris" type="email" name="email" required></td></tr>
+                    <tr><td>Şifre:</td><td><input class="veriGiris" type="password" name="password" required></td></tr>
+                    <tr><td>Şifre Tekrarı:</td><td><input class="veriGiris" type="password" name="passwordTekrar" required></td></tr>
+                    <tr><td colspan="2"><input class="onay_butonu" type="submit" value="Hesap Oluştur"></td></tr>
+                    
+                </table>
+            </form>
+            <div class="login-yonlendirme">
+                <p class="veya-metni">- veya -</p>
+                <p>
+                    Zaten hesabın var mı? 
+                    <a href="{{ url_for('open_login_page') }}" class="giris-linki">Giriş Yap</a>
+                </p>
+
+            </div>
+        </div>
+    </body>
+</html>

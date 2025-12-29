@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+    <div class="maintenance_screen">
+        
+        <div class="screen_header">
+            <h2>BAKIM & ONARIM PANELİ</h2>
+            <br>
+            <p>Envanterdeki ürünlerin bakım&onarım işlemlerini buradan yapabilirsiniz.</p>
+        </div>
+        <div class="FiltreButonlari" style="margin-top:15px;">
+            <a href="/maintenance-repair?status=0" class="btn btn-grey {% if secilen_durum == 0 %} active-border {% endif %}">Tümü</a>
+            <a href="/maintenance-repair?status=1" class="btn btn-blue {% if secilen_durum == 1 %} active-border {% endif %}">Arıza Kaydı Açılanlar</a>
+            <a href="/maintenance-repair?status=2" class="btn btn-lightblue {% if secilen_durum == 2 %} active-border {% endif %}">Teknik İnceleme Bekleyenler</a>
+            <a href="/maintenance-repair?status=3" class="btn btn-orange{% if secilen_durum == 3 %} active-border {% endif %}">İncelenenler</a>
+            <a href="/maintenance-repair?status=4" class="btn btn-red {% if secilen_durum == 4 %} active-border {% endif %}">Parça Bekleyenler</a>
+            <a href="/maintenance-repair?status=5" class="btn btn-lightorange {% if secilen_durum == 5 %} active-border {% endif %}">Onarımı Devam Edenler</a>
+            <a href="/maintenance-repair?status=6" class="btn btn-purple {% if secilen_durum == 6 %} active-border {% endif %}">Dış Servise Gidenler</a>
+            <a href="/maintenance-repair?status=7" class="btn btn-green {% if secilen_durum == 7 %} active-border {% endif %}">Onarımı Tamamlananlar</a>
+            <a href="/maintenance-repair?status=8" class="btn btn-lightpurple {% if secilen_durum == 8 %} active-border {% endif %}">Test Aşamasında Olanlar</a>
+            <a href="/maintenance-repair?status=9" class="btn btn-darkgreen {% if secilen_durum == 9 %} active-border {% endif %}">Kullanıma Hazır Olanlar</a>
+            <a href="/maintenance-repair?status=10" class="btn btn-black {% if secilen_durum == 10 %} active-border {% endif %}">Hurdaya Ayrılanlar</a>
+        </div>
+
+        <div class="bakimdaki-urunler">
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+
+            <h3>📦Bakımdaki Ürünler</h3>
+            <div class="product-grid">
+                {% for product in productsInMaintenance %}
+                    <!-- Her ürün bir LABEL içindedir -->
+                    <label class="product-option">
+                        <input type="radio" name="product" value="{{ product[0] }}" required>
+                            
+                        <!-- GÖRÜNEN KART -->
+                        <div class="product-card">
+                            
+                            <!-- Resim Varsa -->
+                            {% if product[-1] %}
+                                <img src="{{ url_for('static', filename='product_images/' + product[-1]) }}" class="product-img" width="150" height="150">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/no-image.png') }}" class="product-img" width="150" height="150">
+                            {% endif %}
+
+                            <div class="product-name">{{ product[2]}} - {{ product[1] }}</div>
+                            <div class="stock-info">Stok: {{ product[3] | int}}</div>
+                            <div class="quantity-info">Bakımda Olan Miktar: {{product[5] | int}}</div>
+                            <div class="status-info">Durum: {{product[4]}}</div>
+                            <div class="status-info">Tarih: {{product[6]}}</div>
+                            <div class="islem-button"> <a href="{{url_for('open_maintenance_details_page',maintenance_id = product[0])}}" style="border-style:solid; border-color:white; background-color: #c9dbec; color:rgb(5, 103, 70); text-decoration: none; border-radius: 10px; box-shadow: 5px 5px 5px spread grey;">Detay & İşlem</a> </div>
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="bakimdaOlmayan-urunler">
+            
+            <h3>📦Bakımda Olmayan Ürünler</h3>
+            <div class="product-grid">
+                {% for product in productsNotInMaintenance %}
+                    <!-- Her ürün bir LABEL içindedir -->
+                    <label class="product-option">
+                        <input type="radio" name="product" value="{{ product[0] }}" required>
+                            
+                        <!-- GÖRÜNEN KART -->
+                        <div class="product-card">
+                            <!-- Resim Varsa -->
+                            {% if product[-1] %}
+                                <img src="{{ url_for('static', filename='product_images/' + product[-1]) }}" class="product-img" width="150" height="150">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/no-image.png') }}" class="product-img" width="150" height="150">
+                            {% endif %}
+
+                            <div class="product-name">{{ product[2]}} - {{ product[1] }}</div>
+                            <div class="stock-info">Stok: {{ product[3] | int }}</div>
+                            <div class="status-info">Durum: {{product[4]}}</div>
+                            
+                            <div class="islem-button"> <a href="{{url_for('open_create_fault_record_page',product_id=product[0])}}" style="border-style:solid; border-color:white; color:rgb(60, 3, 3); background-color: rgb(241, 154, 154); text-decoration: none; border-radius: 10px; box-shadow: 5px 5px 5px spread grey;">Arıza Kaydı Aç</a> </div>
+                            
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="anasayfaya_don">
+        <ul>
+            <li>
+                <a href="{% if session['rol'] == 'admin' %}{{ url_for('dashboard_admin') }}{% else %}{{ url_for('dashboard_user') }}{% endif %}">
+                    Anasayfaya Dön
+                </a>
+            </li>
+        </ul>
+        </div>
+        </div>
+    </div>
+
+{% endblock %}

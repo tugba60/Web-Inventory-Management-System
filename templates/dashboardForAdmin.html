@@ -1,0 +1,25 @@
+{% extends "base.html" %} {# 1. ADIM: base.html'den kalıtım al #}
+
+{# 2. ADIM: Tarayıcı sekmesindeki başlığı belirle #}
+{% block title %}Kullanıcı Panosu - Envanter Sistemi{% endblock %}
+
+{# 3. ADIM: Sayfaya özel ana içeriği buraya yaz #}
+{% block content %}
+<div class="dashboard-container">
+    <p class="text-center text-white-50 lead mb-5">
+        Kullanıcı panonuzdan işlemlerinizi hızlıca gerçekleştirebilirsiniz.
+    </p>
+    <div class="ek_islemler">
+        <ul class="menu-links">
+            <li><a href="{{ url_for('open_product_management_page') }}" class="menu-item-link menu-item-link-wide">
+                        <img src="{{url_for('static', filename='images/urun_yonetimi.png')}}" alt="Ürün Yönetimi İkonu" class="menu-icon">
+                        <span>Ürün Yönetimi</span>
+                    </a></li>
+            <li><a href="{{ url_for('open_user_management_page') }}" class="menu-item-link menu-item-link-wide">
+                        <img src="{{url_for('static', filename='images/kullanici_yonetimi.png')}}" alt="Kullanıcı Yönetimi İkonu" class="menu-icon">
+                        <span>Kullanıcı Yönetimi</span>
+                    </a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

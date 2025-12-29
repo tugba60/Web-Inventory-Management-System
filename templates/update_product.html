@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+    <div class="update-product-screen">
+        <h3><strong>⚙️ Ürün Güncelleme İşlemi</strong></h3>
+        <p>Buradan gerekli bilgileri doldurarak envanterinize yeni ürün ekleyebilirsiniz.</p>
+         <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+        <div class="islemler">
+            <form action="{{url_for('open_update_product_page',product_id=product[0])}}" method="POST" enctype="multipart/form-data" style="width: 100%;">
+                
+                <div class="icerik-kapsayici" style="display: flex; gap: 20px; align-items: flex-start;">
+                    
+                    <div class="resim_ekleme_islemi" style="flex: 1; background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        <label class="form-label fw-bold mb-2">Ürün Resmi</label>
+                        
+                        <div class="mb-3">
+                            <img id="onizlemeKutusu" 
+                                src="{{ url_for('static', filename='product_images/'+ product[-1]) }}" 
+                                class="img-thumbnail shadow-sm bg-white" 
+                                style="height: 150px; width: 150px; object-fit: contain;">
+                        </div>
+
+                        <div class="w-100">
+                            <input type="file" 
+                                class="form-control form-control-sm" 
+                                name="p_imagePath" 
+                                id="dosyaSecici"
+                                accept=".jpg, .jpeg, .png"
+                                onchange="resimOnizle(event)">
+                            <div class="form-text text-muted mt-2" style="font-size: 12px;">
+                                Sadece JPG, JPEG, PNG (Max: 2MB)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="diger_bilgileri_degistir" style="flex: 2;">
+                        <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+                            <tr>
+                                <td style="width: 30%; font-weight: bold;">Ürün Adı: </td>
+                                <td><input class="veriGiris" type="text" name="p_name" value="{{product[1]}}"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Kategori: </td>
+                                <td>
+                                    <select class="veriGiris" name="p_category_id" >
+                                        <option value="" disabled {% if not product %} selected {% endif %}>Bir Kategori Seçiniz</option>
+                                        {% for category in categories%}
+                                            <option value="{{ category[0] }}" {% if product and product[8] == category[0] %} selected {% endif %}>
+                                                {{ category[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; vertical-align: middle;">Miktar/Birim: </td>
+                                <td>
+                                    <div class="input-group" style="display: flex;">
+                                        <input class="veriGiris" type="text" readonly value="{{product[3]}}" style="width: 300px; padding: 5px; border: 1px solid #ced4da;" >
+                                        <select class="veriGiris" name="p_unit_id"  style="width: 200px; padding: 5px; border: 1px solid #ced4da;  margin-left: 5px;">
+                                            <option value="" disabled selected>Birim</option>
+                                            {% for unit in units%}
+                                                <option value="{{ unit[0] }}">{{ unit[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Giriş Tarihi: </td>
+                                <td><input class="veriGiris" type="text" value={{product[4]}} readonly></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Garanti Bitiş: </td>
+                                <td><input class="veriGiris" type="date" name="p_warrantyendDate" value="{{ product[5].strftime('%Y-%m-%d') if product[5] else '' }}"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Konum: </td>
+                                <td>
+                                    <select class="veriGiris" name="p_location_id" >
+                                        <option value="" disabled {% if not product %} selected {% endif %}>Konum Seçiniz</option>
+                                        {% for location in locations%}
+                                            <option value="{{ location[0] }}" {% if product and product[9] == location[0] %} selected {% endif %}>
+                                                {{ location[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Durum: </td>
+                                <td>
+                                    <select class="veriGiris" name="p_status_id" required>
+                                        <option value="" disabled {% if not product %} selected {% endif %}>Durum Seçiniz</option>
+                                        {% for status in statuses%}
+                                            <option value="{{ status[0] }}" {% if product and product[10] == status[0] %} selected {% endif %}>
+                                                {{ status[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div> <div class="mt-4 text-end">
+                    <button class="onay_butonu" type="submit">
+                        <i class="fas fa-check"></i> 💾 Değişiklikleri Kaydet
+                    </button>
+                    <button class="reset_butonu" type="reset">
+                        <i class="fas fa-times"></i> ❌ Vazgeç
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        <div>
+        <ul style="list-style: none; padding-left: 0; border-style:solid; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-radius: 10px; display: block; text-align: center; color:purple; background-color: rgb(246, 195, 246); margin:15px 15px 15px 15px;" >
+            <li>
+                <a href="{{url_for('open_product_management_page',op_id=2)}}" style="text-decoration: none;">
+                    🔙 Bir Önceki Sayfaya Dön
+                </a>
+            </li>
+        </ul>
+    </div>
+    </div>
+
+    
+<script>
+    function resimOnizle(event) {
+        var secilenDosya = event.target.files[0];
+        var onizlemeKutusu = document.getElementById('onizlemeKutusu');
+
+        if (secilenDosya) {
+            // Dosyayı okumak için FileReader oluştur
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                // Okuma bitince resmin kaynağını (src) yeni dosya yap
+                onizlemeKutusu.src = e.target.result;
+            }
+
+            // Dosyayı URL olarak oku
+            reader.readAsDataURL(secilenDosya);
+        } else {
+            // Eğer dosya seçimi iptal edilirse varsayılan resme dön
+            onizlemeKutusu.src = "/static/product_images/default.png";
+        }
+    }
+</script>
+{% endblock %}

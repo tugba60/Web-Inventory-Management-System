@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+
+<div class="product_management_screen">
+    <div class="screen_header">
+        <h2>📦 ÜRÜN YÖNETİM PANELİ</h2>
+    </div>
+    
+    <div class="FiltreButonlari" style=" margin-top: 30px; margin-bottom: 15px; border: 2px solid rgb(2, 50, 34); border-radius: 10px; padding: 20px; text-align: center; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+        
+            <a href="{{ url_for('open_product_management_page', op_id=1) }}" class="btn btn-green">
+                🆕 Yeni Ürün Ekle
+            </a>
+            <a href="{{ url_for('open_product_management_page', op_id=2) }}" class="btn btn-lightorange">
+                ✏️Ürün Güncelle
+            </a>
+
+            <a href="{{ url_for('open_product_management_page', op_id=3) }}" class="btn btn-red">
+                🗑️ Ürün Sil
+            </a>
+    </div>
+    <div class="screen">
+        {% if active_id==1 %}
+        <h3><strong>➕ Yeni Ürün Ekleme İşlemi</strong></h3>
+        <p>Buradan gerekli bilgileri doldurarak envanterinize yeni ürün ekleyebilirsiniz.</p>
+         <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+        <div class="islemler">
+            <form action="{{url_for('open_product_management_page',op_id=1)}}" method="POST" enctype="multipart/form-data" style="width: 100%;">
+                
+                <div class="icerik-kapsayici" style="display: flex; gap: 20px; align-items: flex-start;">
+                    
+                    <div class="resim_ekleme_islemi" style="flex: 1; background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+                        <label class="form-label fw-bold mb-2">Ürün Resmi</label>
+                        
+                        <div class="mb-3">
+                            <img id="onizlemeKutusu" 
+                                src="{{ url_for('static', filename='product_images/default.png') }}" 
+                                class="img-thumbnail shadow-sm bg-white" 
+                                style="height: 150px; width: 150px; object-fit: contain;">
+                        </div>
+
+                        <div class="w-100">
+                            <input type="file" 
+                                class="form-control form-control-sm" 
+                                name="p_imagePath" 
+                                id="dosyaSecici"
+                                accept=".jpg, .jpeg, .png"
+                                onchange="resimOnizle(event)">
+                            <div class="form-text text-muted mt-2" style="font-size: 12px;">
+                                Sadece JPG, JPEG, PNG (Max: 2MB)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="diger_bilgileri_degistir" style="flex: 2;">
+                        <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+                            <tr>
+                                <td style="width: 30%; font-weight: bold;">Ürün Adı: </td>
+                                <td><input class="veriGiris" type="text" name="p_name" placeholder="Örn: Altay Tankı Palet Pimi" required></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Ürün Kodu: </td>
+                                <td><input class="veriGiris" type="text" name="p_code" placeholder="Örn: ARC-401" required></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Kategori: </td>
+                                <td>
+                                    <select class="veriGiris" name="p_category_id" required>
+                                        <option value="" disabled selected>Bir Kategori Seçiniz</option>
+                                        {% for category in categories%}
+                                            <option value="{{ category[0] }}">{{ category[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; vertical-align: middle;">Miktar/Birim: </td>
+                                <td>
+                                    <div class="input-group" style="display: flex;">
+                                        <input class="veriGiris" type="number" name="p_quantity" placeholder="0.00" required min="0.01" step="0.01" style="width: 300px; padding: 5px; border: 1px solid #ced4da;" >
+                                        <select class="veriGiris" name="p_unit_id" required style="width: 200px; padding: 5px; border: 1px solid #ced4da;  margin-left: 5px;">
+                                            <option value="" disabled selected>Birim</option>
+                                            {% for unit in units%}
+                                                <option value="{{ unit[0] }}">{{ unit[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Giriş Tarihi: </td>
+                                <td><input class="veriGiris" type="datetime-local" name="p_entryDate" required></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Garanti Bitiş: </td>
+                                <td><input class="veriGiris" type="date" name="p_warrantyendDate" required></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Konum: </td>
+                                <td>
+                                    <select class="veriGiris" name="p_location_id" required>
+                                        <option value="" disabled selected>Konum Seçiniz</option>
+                                        {% for location in locations%}
+                                            <option value="{{ location[0] }}">{{ location[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Durum: </td>
+                                <td>
+                                    <select class="veriGiris" name="p_status_id" required>
+                                        <option value="" disabled selected>Durum Seçiniz</option>
+                                        {% for status in statuses%}
+                                            <option value="{{ status[0] }}">{{ status[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div> <div class="mt-4 text-end">
+                    <button class="onay_butonu" type="submit">
+                        <i class="fas fa-check"></i> Ürünü Ekle
+                    </button>
+                    <button class="reset_butonu" type="reset">
+                        <i class="fas fa-times"></i> Vazgeç
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        {% endif %}
+
+
+
+        {% if active_id==2 %}
+            <h3><strong>📝 Ürün Bilgilerini Güncelleme İşlemi</strong></h3>
+            <p>Burada envanterdeki ürünlerden birini seçerek bilgilerini güncelleyebilirsiniz.</p>
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+            <div class="product-grid">
+                {% for product in products %}
+                    <!-- Her ürün bir LABEL içindedir -->
+                    <label class="product-option">
+                        <input type="radio" name="product" value="{{ product[0] }}" required>
+                            
+                        <!-- GÖRÜNEN KART -->
+                        <div class="product-card">
+                            
+                            <!-- Resim Varsa -->
+                            {% if product[-1] %}
+                                <img src="{{ url_for('static', filename='product_images/' + product[-1]) }}" class="product-img" width="150" height="150">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/no-image.png') }}" class="product-img" width="150" height="150">
+                            {% endif %}
+
+                            <div class="product-name">{{ product[2]}} - {{ product[1] }}</div>
+                            <div class="stock-info">Stok: {{ product[3] }}</div>
+                            <div class="status-info">Garanti Bitiş Tarihi: {{product[5]}}</div>
+                            <div class="status-info">Konum: {{product[6]}}</div>
+                            <div class="status-info">Durumu: {{product[7]}}</div>
+                            <div class="islem-button"> <a href="{{url_for('open_update_product_page',product_id = product[0])}}" style="border-style:solid; border-color:white; background-color: #c9dbec; color:rgb(5, 103, 70); text-decoration: none; border-radius: 10px; box-shadow: 5px 5px 5px spread grey;">Ürünü Güncelle</a> </div>
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+            
+        
+        {% endif %}
+
+
+
+
+        {% if active_id==3 %}
+            <h3><strong>📝 Ürün Silme İşlemi</strong></h3>
+            <p>Burada envanterdeki ürünlerden birini seçerek silebilirsiniz.</p>
+                <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>Dikkat:</strong> Sildiğiniz ürün geri getirilemez ve ilgili resim dosyası da sunucudan kaldırılır.
+            </div>
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+            <form action="{{ url_for('delete_product') }}" method="POST">
+                <label class="form-label fw-bold">Silinecek Ürünü Seçin:</label>
+            <div class="product-grid">
+                {% for product in products %}
+                    <!-- Her ürün bir LABEL içindedir -->
+                    <label class="product-option">
+                        <input type="radio" name="deleting_product_id" value="{{ product[0] }}" required>
+                            
+                        <!-- GÖRÜNEN KART -->
+                        <div class="product-card">
+                            
+                            <!-- Resim Varsa -->
+                            {% if product[-1] %}
+                                <img src="{{ url_for('static', filename='product_images/' + product[-1]) }}" class="product-img" width="150" height="150">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/no-image.png') }}" class="product-img" width="150" height="150">
+                            {% endif %}
+
+                            <div class="product-name">{{ product[2]}} - {{ product[1] }}</div>
+                            <div class="stock-info">Stok: {{ product[3] }}</div>
+                            <div class="status-info">Envantere Giriş Tarihi: {{product[4]}}</div>
+                            <div class="status-info">Garanti Bitiş Tarihi: {{product[5]}}</div>
+                            <div class="status-info">Konum: {{product[6]}}</div>
+                            <div class="status-info">Durumu: {{product[7]}}</div>
+                            
+                        </div>
+                    </label>
+                    {% endfor %}
+                </div>
+                
+                <div class="text-end">
+                    <button type="submit" 
+                            class="btn btn-danger btn-lg" 
+                            style="border-style:solid; border-color:white; background-color: #c9dbec; color:rgb(5, 103, 70);
+                                text-decoration: none; border-radius: 10px; box-shadow: 5px 5px 5px spread grey;"
+                            onclick="return confirm('Bu ürünü ve resmini kalıcı olarak silmek istediğinize emin misiniz?');">
+                        <i class="fas fa-trash"></i> Seçili Ürünü Sil
+                    </button>
+                </div>
+                    
+                </form>
+        {% endif %}
+    
+    <div class="anasayfaya_don" >
+        <ul>
+            <li>
+                <a href="{% if session['rol'] == 'admin' %}{{ url_for('dashboard_admin') }}{% else %}{{ url_for('dashboard_user') }}{% endif %}" >
+                    Ana Sayfaya Dön
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    function resimOnizle(event) {
+        var secilenDosya = event.target.files[0];
+        var onizlemeKutusu = document.getElementById('onizlemeKutusu');
+
+        if (secilenDosya) {
+            // Dosyayı okumak için FileReader oluştur
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                // Okuma bitince resmin kaynağını (src) yeni dosya yap
+                onizlemeKutusu.src = e.target.result;
+            }
+
+            // Dosyayı URL olarak oku
+            reader.readAsDataURL(secilenDosya);
+        } else {
+            // Eğer dosya seçimi iptal edilirse varsayılan resme dön
+            // Not: Buradaki yolu kendi varsayılan resim yolunla güncelle
+            onizlemeKutusu.src = "/static/product_images/default.png";
+        }
+    }
+</script>
+{% endblock %}

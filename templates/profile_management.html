@@ -1,0 +1,93 @@
+{% extends "base.html" %} {# 1. ADIM: base.html'den kalıtım al #}
+
+{# 2. ADIM: Tarayıcı sekmesindeki başlığı belirle #}
+{% block title %}Kullanıcı Panosu - Envanter Sistemi{% endblock %}
+
+{# 3. ADIM: Sayfaya özel ana içeriği buraya yaz #}
+{% block content %}
+<div class="dashboard-container">
+    <p class="text-center text-white-50 lead mb-5">
+        Kullanıcı panonuzdan işlemlerinizi hızlıca gerçekleştirebilirsiniz.
+    </p>
+    <div class="prfile_manag_screen">
+        <div class="managenet_header">
+            <h2>Profil Ayarları</h2>
+            <p class="text-white-50 small">Bilgilerinizi güncelleyebilir ve şifrenizi değiştirebilirsiniz.</p>
+        </div>
+        <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+         
+        <div class="management_processing">
+            <form action="{{url_for('open_profile_management_page')}}" method="POST">
+                <table id="prfile1">
+                    <tr><td>İsim:</td><td><input class="veriGiris" type="text" name="isim" value="{{user.Name_}}" ></td></tr>
+                    <tr><td>Soyisim:</td><td><input class="veriGiris" type="text" name="soyisim" value="{{user.Surname_}}"  ></td></tr>
+                    <tr><td>Kullanıcı Adı:</td><td><input class="veriGiris" type="text" name="kullaniciAdi" value="{{user.Username}}" ></td></tr>
+                    <tr><td>Departman:</td><td>
+                        <select class="veriGiris" name="departman" readonly>
+                            <option value="" disabled>Departmanınızı Değiştiremezsiniz</option>
+                            {% for departman in departmanlar%}
+                                {% if departman[0]|string == user.Dept_id|string %}
+                                <option value="{{ departman[0] }}" 
+                                    {% if departman[0]|string == user.Dept_id|string %}selected="selected"{% endif %}>
+                                    {{ departman[1] }}
+                                </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td></tr>
+                    <tr><td>E-mail Adresi:</td><td><input class="veriGiris" type="email" name="email" value="{{user.e_mail}}" ></td></tr>
+                    <tr><td>İzin Durumu:</td><td>
+                        <input type="text" value="{{user.IzinDurumu}}" class="veriGiris"  readonly>
+                    </td></tr>
+                    <tr><td>Erişim İzni İsteme:</td><td>
+                        <div class="radio-group">
+                            <!-- GİRİŞ SEÇENEĞİ -->
+                            <label style="margin-right: 15px; cursor: pointer;">
+                                <input type="radio" name="request_type" value="1" class="veriGiris"  
+                                {% if user.access_request_pending|int == 1 %}checked{% endif %}>
+                                <span style="color: green; font-weight: bold;">Erişim izni istiyorum</span>
+                            </label>
+
+                            <!-- ÇIKIŞ SEÇENEĞİ -->
+                            <label style="cursor: pointer;">
+                                <input type="radio" name="request_type" value="0" class="veriGiris"
+                                {% if user.access_request_pending|int == 0 %}checked{% endif %} >
+                                <span style="color: red; font-weight: bold;">Erişim izni istemiyorum</span>
+                            </label>
+                        </div>
+                    </td></tr>
+                    <tr><td colspan="2"><input class="onay_butonu" type="submit" value="KAYDET"></td></tr>
+                    <tr><td colspan="2"><input class="reset_butonu" type="reset" value="VAZGEÇ"></td></tr>
+                </table>
+            </form>
+            
+            <table>
+                <tr><td>Şifre Değiştirme:</td><td><a class="link_to_sifre" href="{{url_for('sifre_degistir')}}">Şifre Değiştir</a></td></tr>
+            </table>
+
+        <div class="anasayfaya_don">
+            <ul>
+                <li>
+                    <a href="{% if session['rol'] == 'admin' %}{{ url_for('dashboard_admin') }}{% else %}{{ url_for('dashboard_user') }}{% endif %}">
+                        Anasayfaya Dön
+                    </a>
+                </li>
+            </ul>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+    <div class="reports_view_screen">
+        <div class="screen_header">
+            <h3>{{report_title}}</h3>
+        </div>
+        <div class="screen" >
+            <div class="filtreler" style=" margin-top: 30px; border: 2px solid rgb(239, 212, 175); border-radius: 10px; padding: 20px; text-align: left; ">
+            <p style="margin-bottom:10px;"><strong>Filtreler</strong></p>
+                <form action="{{ url_for('open_generic_reports_page', report_id=active_id)}}" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                        
+            {% if active_id==1 %}
+                
+                    <label for="kategori"><strong>Kategori:</strong></label>
+                    
+                        <select class="veriGiris" name="filter_1" onchange="this.form.submit()" >
+                            <option value="" disabled selected>Bir Ürün Kategorisi Seçiniz</option>
+                            {% for categori in categories%}
+                                <option value="{{ categori[0] }}">{{ categori[1] }}</option>
+                            {% endfor %}
+                        </select>
+
+                         <label for="miktar"><strong>Miktar:</strong></label>
+                         <input type="number" name="filter_2" class="veriGiris" min="0.01" step="0.01"  placeholder="0.00" >
+                         
+                    
+            {% endif %}
+
+            {% if active_id==2 %}
+                    <label for="tarih"><strong>Tarih: </strong></label>
+                    <input type="datetime-local" name="filter_tarih" class="veriGiris" onchange="this.form.submit()">
+
+                    <div class="radio-group">
+                        <!-- GİRİŞ SEÇENEĞİ -->
+                        <label style="margin-right: 15px; cursor: pointer;">
+                            <input type="radio" name="filter_islemTipi" value="1" class="veriGiris" onchange="this.form.submit()" {% if request.form.get('filter_islemTipi') == '0' %}checked{% endif %} >
+                            <span style="color: green; font-weight: bold;">📥 Giriş (Stok Ekle)</span>
+                        </label>
+
+                        <!-- ÇIKIŞ SEÇENEĞİ -->
+                        <label style="cursor: pointer;">
+                            <input type="radio" name="filter_islemTipi" value="0" class="veriGiris" onchange="this.form.submit()" {% if request.form.get('filter_islemTipi') == '0' %}checked{% endif %}>
+                            <span style="color: red; font-weight: bold;">📤 Çıkış (Stok Düş)</span>
+                        </label>
+                    </div>
+            {% endif %}
+            {% if active_id==3 %}
+                    <label for="durum"><strong>Bakım Durumu:</strong></label>
+                    
+                    <select class="veriGiris" name="filter_durum" onchange="this.form.submit()" >
+                        <option value="" disabled selected>Bir Bakım Durumu Seçiniz</option>
+                        {% for status in statuses%}
+                            <option value="{{ status[0] }}">{{ status[1] }}</option>
+                        {% endfor %}
+                    </select>
+                     <label for="tarih"><strong>Tarih: </strong></label>
+                    <input type="datetime-local" name="filter_tarih2" class="veriGiris" onchange="this.form.submit()">
+            {% endif %}
+            {% if active_id==4 %}
+                    <label for="tarih"><strong>Tarih: </strong></label>
+                    <input type="datetime-local" name="filter_tarih3" class="veriGiris" onchange="this.form.submit()">
+            {% endif  %}
+                    <button type="submit" style="display: none;"></button>
+                </form>
+            </div>
+            <div class="veriler" style="margin-top:15px; max-height: 450px; overflow-y: auto; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); scrollbar-width: thin; scrollbar-color: #1847ac #cdddf4; overflow-x: hidden; word-wrap: break-word;">
+                <table class="table-of-details">
+                    <thead class="table-head">
+                        <tr>
+                            {% for header in headers %}
+                                <th>{{header}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        {% if data %}
+                            {% for row in data %}
+                                <tr style="border-bottom: 1px solid #f4cdcd;">
+                                    {% for cell in row %}
+                                        <td style="padding: 10px;">
+                                            {% if cell is string and (cell.endswith('.jpg') or cell.endswith('.png')) %}
+                                                <img src="{{ url_for('static', filename='product_images/' + cell) }}" width="50" height="50" style="object-fit: cover; border-radius: 5px;">
+                                            {% else %}
+                                                {{ cell }}
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="{{ headers|length }}" style="text-align: center; padding: 20px;">
+                                    Veri bulunamadı.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>  
+        </div>
+    </div>
+{% endblock %}

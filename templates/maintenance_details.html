@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+
+    <div class="maintenance_details_page">
+
+        <div class="card-header">
+            <h3 style="text-align: center; font-weight: bold;">⚠️ Bakım Durumu Güncelleme Paneli</h3>
+            <h4 style="text-align: left; font-size: 15px;">Bakım Detayları</h4>
+        </div>
+        <div class="product-card">
+            <!-- Resim Varsa -->
+            {% if product[-1] %}
+                <img src="{{ url_for('static', filename='product_images/' + product[-1]) }}" class="product-img" width="150" height="150">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/no-image.png') }}" class="product-img" width="150" height="150">
+            {% endif %}
+
+            <div class="product-name">{{ product[2]}} - {{ product[1] }}</div>
+            <div class="stock-info">Stok: {{ product[3] | int}}</div>
+            <div class="quantity-info">Bakımda Olan Miktar: {{product[4] | int}}</div>
+            <div class="quantity-info">Bu Üründen Bakımda Olan Toplam Miktar: {{product[11] | int}}</div>
+            <div class="status-info">Durum: {{product[5]}}</div>
+            <div class="status-info">Bakıma Alınma Tarihi: {{product[6]}}</div>
+            <div class="status-info">Ürün Konumu: {{product[9]}}</div>
+            <div class="status-info">Açıklama: {{product[10]}}</div>
+            <div class="islem-button">
+                <button type="button" class="btn btn-warning fw-bold text-white" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#updateModal"
+                        style="border-style:solid; border-color:white; background-color: #c9dbec; color:rgb(5, 103, 70); text-decoration: none; border-radius: 10px; box-shadow: 5px 5px 5px spread grey;">
+                    🛠️ Durumu Güncelle / İşlemi Bitir
+                </button> 
+            </div>
+        </div>
+
+        <div class="piece-of-detalis">
+            <table class="table-of-details">
+                <thead class="table-head">
+                    <tr>
+                        <th>Tarih</th>
+                        <th>İşlemi Yapan</th>
+                        <th>Durum</th>
+                        <th>Adet</th>
+                        <th>Bitiş Tarihi (Varsa)</th>
+                        <th>Açıklama</th>
+                    </tr>
+                </thead>
+                <tbody class="table-body">
+                    {% if history %}
+                        {% for log in history %}
+                        <tr>
+                            <td>{{ log[1] }}</td>
+                            <td>{{ log[0] }}</td>
+                            <td>{{ log[4] }}</td>
+                            <td><span class="badge bg-secondary">{{ log[5]|int }}</span></td>
+                            <td>{{ log[2] }}</td>
+                            <td class="small text-muted">{{ log[3] }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-3">Henüz geçmiş kaydı bulunmuyor.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            
+            <div class="modal-header bg-warning">
+                <h4 class="modal-title text-white">Durum Güncelleme</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <form action="{{ url_for('update_maintenance_status', bakim_id=product[7]) }}" method="POST">
+                <div class="modal-body">
+                    
+                    <div class="alert alert-light border small text-muted">
+                        <i class="fas fa-info-circle"></i> Durumu <b>"Onarım Tamamlandı veya Kullanıma Hazır"</b> yaparsanız stok otomatik iade edilir.
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Yeni Durum:</label>
+                        <select class="veriGiris" name="yeni_durum_id" required>
+                            {% for durum in durumlar %}
+                                <option value="{{ durum[0] }}" {% if durum[0] == product[8] %}selected{% endif %}>
+                                    {{ durum[1] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tarihInput" class="form-label fw-bold text-secondary">İşlem Bitiş Tarihi</label>
+                        <input type="datetime-local" 
+                                id="tarihInput" 
+                                name="tarih" 
+                                class="veriGiris" 
+                                required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Yapılan İşlem / Notlar:</label>
+                        <textarea class="veriGiris" name="yeni_aciklama" rows="3">{{ product[10] }}</textarea>
+                    </div>
+
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet ve Güncelle</button>
+                </div>
+            </form>
+            <ul class="geridon">
+            <li>
+                <a href="{{url_for('open_maintenance_repair_page')}}" style="border-style:solid; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-radius: 10px; display: block; text-align: center; text-decoration: none; color:purple; background-color: rgb(246, 195, 246); margin:15px 15px 15px 15px;">
+                    Geri Dön
+                </a>
+            </li>
+        </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

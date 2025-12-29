@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Envanter Yönetim Sistemi</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+        <link rel="icon" href="{{url_for('static', filename='images/favicon.png')}}">        
+    </head>
+    <body>
+        <div class="index_screen">
+            <img src="{{url_for('static', filename='images/logo.png')}}" alt="envanter yönetim sistemi logosu" title="logo" width="150" height="150" >
+            <h1>Envanter Yönetim Sistemine Hoşgeldiniz!</h1>
+            <p>____________________________________________________</p><br>
+            <table>
+                <tr><td colspan="2"><a href="{{ url_for('open_register_page') }}" id="hesap_ac_butonu"> Hesap Aç</a></td></tr>
+                <tr><td colspan="2" ><a href="{{ url_for('open_login_page') }}" id="hesaba_gir_butonu"> Hesabına Giriş Yap</a></td></tr>
+            </table>
+        </div>
+    </body>
+</html>

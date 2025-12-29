@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+    <p class="text-center text-white-50 lead mb-5">
+        Kullanıcı panonuzdan işlemlerinizi hızlıca gerçekleştirebilirsiniz.
+    </p>
+    <div class="create_fault_record_page">
+        <div class="card-header">
+        <h3 style="text-align: center; font-weight: bold;" >⚠️ Arıza Kaydı Oluşturma Paneli</h3>
+        </div>
+        <div class="product-card">
+            <!-- Resim Varsa -->
+            {% if product[-1] %}
+                <img src="{{ url_for('static', filename='product_images/' + product[-1]) }}" class="product-img" width="150" height="150">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/no-image.png') }}" class="product-img" width="150" height="150">
+            {% endif %}
+
+            <div class="product-name">{{ product[2]}} - {{ product[1] }}</div>
+            <div class="stock-info">Stok: {{ product[3] | int}}</div>
+        </div>
+
+        <form action="{{ url_for('save_fault_record', product_id=product[0]) }}" method="POST">
+            <div class="creating-record">
+
+                <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                            {% for category, message in messages %}
+                                <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+
+                <label for="adetInput" class="form-label fw-bold text-secondary">Bakıma Gönderilecek Adet</label>
+                <div class="input-group mb-3">
+                    <input type="number" 
+                           id="adetInput" 
+                           name="adet" 
+                           class="veriGiris" 
+                           value="1" 
+                           min="1" 
+                           max="{{ product[3] | int}}" 
+                           required>
+                    <span class="input-group-text">Adet</span>
+                </div>
+                <div class="form-text text-danger">
+                    * En fazla {{ product[3] | int }} adet seçebilirsiniz (Stok sınırı).
+                </div>
+                <div class="mb-3">
+                    <label for="tarihInput" class="form-label fw-bold text-secondary">Bakım Başlangıç Tarihi</label>
+                    <input type="datetime-local" 
+                            id="tarihInput" 
+                            name="baslangic_tarihi" 
+                            class="veriGiris" 
+                            required>
+                </div>
+                <div class="mb-4">
+                    <label for="aciklamaInput" class="form-label fw-bold text-secondary">Arıza Açıklaması / Notlar</label>
+                    <textarea name="aciklama" 
+                                id="aciklamaInput" 
+                                class="veriGiris" 
+                                rows="4" 
+                                placeholder="Lütfen arızayı detaylandırın (Örn: Ekran kırık, çalışmıyor...)" 
+                                required></textarea>
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <input class="onay_butonu" type="submit" value="ONAYLA">
+                    <a href="{{ url_for('open_maintenance_repair_page') }}" class="btn btn-secondary px-4">Vazgeç</a>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

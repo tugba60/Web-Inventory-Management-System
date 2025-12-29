@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login Ekranı</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+        <link rel="icon" href="{{url_for('static', filename='images/favicon.png')}}">
+        <style>
+            h1{
+                margin-bottom:25px;
+            }
+            h2{
+                margin-bottom: 15px;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <div class="login_screen">
+            <img src="{{url_for('static', filename='images/logo.png')}}" alt="envanter yönetim sistemi logosu" title="logo" width="150" height="150" >
+            <h1>Envanter Yönetim Sistemine Hoşgeldiniz!</h1>
+            <h2>Hesabına Giriş Yap</h2>
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+            <form action="{{ url_for('open_login_page') }}" method="POST">
+                 <table>
+                    <tr><td>E-posta Adresi:</td><td><input class="veriGiris" type="email" name="email" required></td></tr>
+                    <tr><td>Şifre:</td><td><input class="veriGiris" type="password" name="password" size="10" required></td></tr>
+                    <tr><td colspan="2"><input type="submit" class="onay_butonu" value="Giriş Yap"></td></tr>
+                </table>
+            </form>
+           
+            <p>____________________________________________________</p><br>
+            <table style="margin-bottom:30px">
+                <tr><td colspan="2">Hesabınız yok mu?</td></tr>
+                <tr><td colspan="2" ><a href="{{url_for('open_register_page')}}" id="hesapAc_butonu"> Hesap Aç</a></td></tr>
+            </table>
+           <a href="{{url_for('sifremi_unuttum')}}">Şifremi Unuttum</a>
+            
+
+        </div>
+        
+    </body>
+</html>

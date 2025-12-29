@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+
+<div class="reports_screen">
+    <div class="screen_header">
+        <h2>📊 Rapor Seçimi</h2>
+    </div>
+    
+    <div class="FiltreButonlari" style=" margin-top: 30px; border: 2px solid rgb(2, 50, 34); border-radius: 10px; padding: 20px; text-align: center; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+        
+            <a href="/reports/view/1" class="btn btn-blue">
+                📦 Tüm Ürünleri Listele
+            </a>
+            <a href="/reports/view/2" class="btn btn-red">
+                🔄 Stok İşlemlerini Görüntüle
+            </a>
+            <a href="/reports/view/3" class="btn btn-green">
+                🛠️ Bakım Kayıtlarını Görüntüle
+            </a>
+
+        {% if session['rol'] == 'admin' %}
+            <a href="/reports/view/4" class="btn btn-orange">
+                📜 Sistem Loglarını Görüntüle
+            </a>
+        {% endif %}
+    </div>
+    <div class="anasayfaya_don" >
+        <ul style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+            <li>
+                <a href="{% if session['rol'] == 'admin' %}{{ url_for('dashboard_admin') }}{% else %}{{ url_for('dashboard_user') }}{% endif %}" >
+                    Anasayfaya Dön
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

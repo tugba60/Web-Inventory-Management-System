@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+    <p class="text-center text-white-50 lead mb-5">
+        Kullanıcı panonuzdan işlemlerinizi hızlıca gerçekleştirebilirsiniz.
+        </p>
+    <div class="transtactions_screen">
+        
+        <div class="screen_header">
+            <h2>STOK İŞLEMLERİ</h2>
+            <br>
+            <p>Envanterdeki ürünlerin giriş-çıkış işlemlerini buradan yapabilirsiniz.</p>
+        </div>
+        <div class="urunler">
+           <form action="{{ url_for('open_stock_tracking_page') }}" method="GET" style="display: flex; gap: 10px; align-items: center;">
+        
+                <label for="kategori"><strong>Kategori Filtrele:</strong></label>
+                
+                <select name="kategori" id="kat_id" class="form-control" style="width: 200px;" onchange="this.form.submit()">
+                    <option value="hepsi">Tüm Kategoriler</option>
+                    
+                    {% for kategori in kategoriler %}
+                        <option value="{{ kategori[0] }}" 
+                            {% if aktif_kategori == kategori[0]|string %} selected {% endif %}>
+                            {{ kategori[1] }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+            </form>
+            <form action="{{url_for('open_stock_tracking_page')}}" method="POST">
+            <h3>📦 1. Adım: Ürün Seçimi</h3>
+            <div class="product-grid">
+                {% for product in products %}
+                    <!-- Her ürün bir LABEL içindedir -->
+                    <label class="product-option">
+                        <input type="radio" name="product" value="{{ product[0] }}" required>
+                            
+                        <!-- GÖRÜNEN KART -->
+                        <div class="product-card">
+                            <!-- Resim Varsa -->
+                            {% if product[-1] %}
+                                <img src="{{ url_for('static', filename='product_images/' + product[-1]) }}" class="product-img" width="150" height="150">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/no-image.png') }}" class="product-img" width="150" height="150">
+                            {% endif %}
+
+                            <div class="product-name">{{ product[2]}} - {{ product[1] }}</div>
+                            <div class="stock-info">Stok: {{ product[3] }}</div>
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="islemBilgileri">
+            <h3>⚙️ 2. Adım: İşlem Detayları</h3>
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+            <table>
+                <tr><td>İşlem Türü:</td><td>
+                    <div class="radio-group">
+                        <!-- GİRİŞ SEÇENEĞİ -->
+                        <label style="margin-right: 15px; cursor: pointer;">
+                            <input type="radio" name="transaction_type" value="Giriş" class="veriGiris" required checked>
+                            <span style="color: green; font-weight: bold;">📥 Giriş (Stok Ekle)</span>
+                        </label>
+
+                        <!-- ÇIKIŞ SEÇENEĞİ -->
+                        <label style="cursor: pointer;">
+                            <input type="radio" name="transaction_type" value="Çıkış" class="veriGiris" required>
+                            <span style="color: red; font-weight: bold;">📤 Çıkış (Stok Düş)</span>
+                        </label>
+                    </div>
+                </td></tr>
+                <tr><td>Miktar:</td><td>
+                    <input type="number" name="miktar" class="veriGiris" min="0.01" step="0.01" required placeholder="0.00">
+                </td></tr>
+                <tr><td>İşlem Tarihi:</td><td>
+                    <input type="datetime-local" name="date" class="veriGiris", required>
+                </td></tr>
+                <tr><td>Açıklama:</td><td>
+                    <textarea name="note" rows="3" placeholder="Örn: Proje-1 için kullanıldı, Ürün stoğu güncellendi..."></textarea>
+                </td></tr>
+                <tr><td colspan="2"><input class="onay_butonu" type="submit" value="ONAYLA"></td></tr>
+                <tr><td colspan="2"><input class="reset_butonu" type="reset" value="VAZGEÇ"></td></tr>
+            </table>
+        </form>
+        <div class="anasayfaya_don">
+        <ul>
+            <li>
+                <a href="{% if session['rol'] == 'admin' %}{{ url_for('dashboard_admin') }}{% else %}{{ url_for('dashboard_user') }}{% endif %}">
+                    Anasayfaya Dön
+                </a>
+            </li>
+        </ul>
+        </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Stok Hareketleri - Envanter Sistemi{% endblock %}
+
+{% block content %}
+
+    <div class="user-management-screen">
+         <div class="screen_header">
+            <h2>👤 KULLANICI YÖNETİM PANELİ</h2>
+        </div>
+        
+        <div class="FiltreButonlari" style=" margin-top: 30px; margin-bottom: 15px; border: 2px solid rgb(2, 50, 34); border-radius: 10px; padding: 20px; text-align: center; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+            
+                <a href="{{ url_for('open_user_management_page', op_id=1) }}" class="btn btn-lightblue">
+                    🔍 Kullanıcıları Görüntüle
+                </a>
+                <a href="{{ url_for('open_user_management_page', op_id=2) }}" class="btn btn-lightorange">
+                    📝 Kullanıcı Bilgilerini Güncelle
+                </a>
+        </div>
+        <div class="screen">
+            {% if active_id==1 %}
+                <h3><strong>Kullanıcıları Görüntüle</strong></h3>
+                <p>Buradan gerekli filtrelemeleri yaparak kullanıcıları görüntüleyebilirsiniz.</p>
+
+                <div class="filtreleme">
+                <form action="{{ url_for('open_user_management_page', op_id=1)}}" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                <label for="filtre"><strong>Filtrele:</strong></label>
+                    
+                    <select class="veriGiris" name="filter_1" onchange="this.form.submit()" >
+                        <option value="" disabled {% if not secilen_filtre_id %} selected {% endif %}>Bir Filtre Seçeneği Seçiniz</option>
+                        {% for status in AccountStatuses%}
+
+                            {% if status[0]==1 %}
+                                <option value="{{ status[0] }}"{% if secilen_filtre_id == status[0] %} selected {% endif %}>
+                                    Aktif Çalışanlar Listesini Getir</option>
+                            {% endif%}
+
+                            {% if status[0]==2 %}
+                                <option value="{{ status[0] }}"{% if secilen_filtre_id == status[0] %} selected {% endif %}>
+                                    Eski Çalışanlar Listesini Getir</option>
+                            {% endif%}
+
+                            {% if status[0]==3 %}
+                                <option value="{{ status[0] }}"{% if secilen_filtre_id == status[0] %} selected {% endif %}>
+                                    Yeni İşe Gireceklerin Listesini Getir</option>
+                            {% endif%}
+
+                            {% if status[0]==4 %}
+                                <option value="{{ status[0] }}"{% if secilen_filtre_id == status[0] %} selected {% endif %}>
+                                    Yıllık İzinde Olanların Listesini Getir</option>
+                            {% endif%}
+
+                            {% if status[0]==5 %}
+                                <option value="{{ status[0] }}"{% if secilen_filtre_id == status[0] %} selected {% endif %}>
+                                    Durumu Bilinmeyenlerin Listesini Getir</option>
+                            {% endif%}
+
+                        {% endfor %}
+                    </select>
+                </form>
+                </div>
+                <div class="veriler">
+                    <table class="table-of-details">
+                        <thead class="table-head">
+                            <tr>
+                                <th>İsim</th>
+                                <th>Soyisim</th>
+                                <th>Kullanıcı Adı</th>
+                                <th>e-Mail</th>
+                                <th>Departman Adı</th>
+                                <th>Rolü</th>
+                                <th>Erişim İsteği</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            {% for user in users%}
+                            <tr>
+                                <td>{{user[0]}}</td>
+                                <td>{{user[1]}}</td>
+                                <td>{{user[2]}}</td>
+                                <td>{{user[3]}}</td>
+                                <td>{{user[4]}}</td>
+                                <td>{{user[5]}}</td>
+                                <td>{{user[6]}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
+
+            {% if active_id==2 %}
+                <h3><strong>Kullanıcı Bilgilerini Güncelleme İşlemi</strong></h3>
+                <p>Buradan istediğiniz kullanıcının bilgilerini düzenleyebilirsiniz.</p>
+                <!-- FLAŞ MESAJLARI GÖSTERME ALANI BAŞLANGICI -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div class="flash-messages">
+                                {% for category, message in messages %}
+                                    <!-- 'category' python'dan gelen 'success' veya 'danger' kelimesidir -->
+                                    <div class="alert alert-{{ category }}">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                <!-- FLAŞ MESAJLARI GÖSTERME ALANI BİTİŞİ -->
+                
+                <h3>1. Adım: Kullanıcı Seçimi</h3>
+                <div class="product-grid">
+                    {% for aUser in everyone %}
+                        <label class="product-option">
+                            <input type="radio" name="user_id" value="{{ aUser[0] }}" required>
+                                
+                            <!-- GÖRÜNEN KART -->
+                            <div class="product-card">
+                                <img src="{{ url_for('static', filename='images/user.png') }}" class="product-img" width="100" height="100">
+                                
+
+                                <div class="stock-info">{{ aUser[1]}} {{ aUser[2] }}</div>
+                                <div class="stock-info">Kullanıcı Adı: {{ aUser[3] }}</div>
+                                <div class="stock-info">Departman: {{ aUser[4] }}</div>
+                                <div class="stock-info">Rol: {{ aUser[5] }}</div>
+                                <div class="stock-info">Hesap Durumu: {{ aUser[6] }}</div>
+                                <div class="islem-button"> <a href="{{url_for('open_update_users_page',user_id = aUser[0])}}" style="border-style:solid; border-color:white; background-color: #eac9ec; color:rgb(95, 5, 103); text-decoration: none; border-radius: 10px; box-shadow: 5px 5px 5px spread grey;">Güncelle</a> </div>
+                            </div>
+                        </label>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+         <div class="anasayfaya_don" >
+        <ul>
+            <li>
+                <a href="{% if session['rol'] == 'admin' %}{{ url_for('dashboard_admin') }}{% else %}{{ url_for('dashboard_user') }}{% endif %}" >
+                    Ana Sayfaya Dön
+                </a>
+            </li>
+        </ul>
+    </div>
+    </div>
+
+
+{% endblock %}

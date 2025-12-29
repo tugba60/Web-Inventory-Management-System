@@ -161,7 +161,7 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
       <br>
     </td>
     <td align="center">
-      <img src="screenshots/update_usert.png" width="100%" alt="kullanıcı güncelleme">
+      <img src="screenshots/update_users.png" width="100%" alt="kullanıcı güncelleme">
       <br>
     </td>
      <td align="center">

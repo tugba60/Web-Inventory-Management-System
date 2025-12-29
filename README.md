@@ -170,7 +170,7 @@ Proje, yazılım mühendisliği prensiplerine göre aktif olarak geliştirilmeye
     </td>
   </tr>
 </table>
----
+
 ## ⚙️ Kurulum ve Çalıştırma
 
 Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
@@ -194,8 +194,6 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
     ```bash
     python app.py
     ```
-    ---
+---
 *Geliştirici: [Tuğba KARATAŞ]*
 
----
-*Geliştirici: [Adın Soyadın]*
